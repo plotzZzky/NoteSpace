@@ -50,9 +50,9 @@ export default function About() {
                     sessionStorage.setItem("token", data["token"])
                     setToken(sessionStorage.getItem("token"))
                 })
-      }
+    }
 
-      function SignUpFunc() {
+    function SignUpFunc() {
         let url = `http://127.0.0.1:8000/users/register/`
         let json = {
             "username": getUsername,
@@ -60,15 +60,20 @@ export default function About() {
             "password1": getPassword1,
             "password2": getPassword2,
         }
-        fetch(url, {method: 'POST',
-                headers: {'Content-Type':'application/json'},
-                body: JSON.stringify(json)})
-                .then((res) => res.json())
-                .then((data) => {
-                    localStorage.setItem("token", data["token"])
-                    setToken(sessionStorage.getItem("token"))
-                })     
-      }  
+
+        let info = {method: 'POST',
+                    headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify(json)}
+
+        fetch(url, info)
+        .then((res) => res.json())
+        .then((data) => {
+            console.log(data)
+            sessionStorage.setItem("token", data["token"])
+            setToken(sessionStorage.getItem("token"))
+        })
+    }
+
 
     useEffect(() => {
         check_login()
