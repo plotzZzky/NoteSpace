@@ -1,0 +1,40 @@
+.login-div {
+    display: block;
+    width: 500px;
+    height: auto;
+    margin: auto;
+    padding: 1em;
+    background-color: var(--color_accent);
+}
+
+.login-title {
+    color: var(--background);
+    font-weight: 600;
+    font-size: 1.6em;
+}
+
+.login-text-link {
+    color: var(--fontColor_sec);
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.text-input {
+    width: calc(90% - 16px);
+    height: auto;
+    padding: 8px;
+    border: none;
+    margin: 2%;
+    background-color: lightgrey;
+    font-weight: 600;
+}
+
+@media screen and (max-width: 700px) {
+    .login-div {
+        width: 90%;
+        margin-left: 5%;
+        margin-right: 5%;
+        padding: 0;
+    }
+    
+}
