@@ -1,115 +1,115 @@
 .contacts-div {
-    width: calc(100vw - 6em);
-    height: calc(100vh - 8em);
-    padding: 1em;
-    margin: auto;
-    margin-top: -5em;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-content: flex-start;
-    position: relative;
-    flex-wrap: wrap;
-    gap: 1em 1em;
-    overflow-y: auto;
+  width: calc(100vw - 6em);
+  height: calc(100vh - 8em);
+  padding: 1em;
+  margin: auto;
+  margin-top: -5em;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-content: flex-start;
+  position: relative;
+  flex-wrap: wrap;
+  gap: 1em 1em;
+  overflow-y: auto;
 }
 
 .contact-card {
-    width: 240px;
-    height: 350px;
-    padding: 1em;
-    margin: 0;
-    background-color: white;
-    position: relative;
+  width: 240px;
+  height: 350px;
+  padding: 1em;
+  margin: 0;
+  background-color: white;
+  position: relative;
 }
 
 .contact-div-title {
-    width: 100%;
-    height: auto;
-    margin: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  width: 100%;
+  height: auto;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .contact-image {
-    width: 60%;
-    height: auto;
-    margin: auto;
-    margin-bottom: 10px;
-    padding: 0;
-    border-radius: 50%;
-    box-shadow: var(--shadow);
+  width: 60%;
+  height: auto;
+  margin: auto;
+  margin-bottom: 10px;
+  padding: 0;
+  border-radius: 50%;
+  box-shadow: var(--shadow);
 }
 
 .contact-title {
-    font-size: 1.2em;
-    font-weight: 600;
+  font-size: 1.2em;
+  font-weight: 600;
 }
 
 .contact-input {
-    width: calc(100% - 0.4em);
-    height: auto;
-    margin: 2px;
-    padding: 0.2em;
-    text-align: center;
-    border: none;
+  width: calc(100% - 0.4em);
+  height: auto;
+  margin: 2px;
+  padding: 0.2em;
+  text-align: center;
+  border: none;
 }
 
 .div-align-contact-info {
-    width: 100%;
-    height: auto;
-    padding: 0;
-    margin: auto;
-    display: flex;
-    flex-direction: column;
+  width: 100%;
+  height: auto;
+  padding: 0;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .site-align-btns {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    display: inline-flex;
-    justify-content: space-between;
-    width: 92%;
-    height: auto;
-    padding-left: 1em;
-    padding-right: 1em;
-    padding-bottom: 4px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: inline-flex;
+  justify-content: space-between;
+  width: 92%;
+  height: auto;
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-bottom: 4px;
 }
 
 .site-save {
-    cursor: pointer;
-    font-size: 1.2em;
+  cursor: pointer;
+  font-size: 1.2em;
 }
 
 .site-colorSelect {
-    border: none;
-    height: 2em;
-    width: 4em;
+  border: none;
+  height: 2em;
+  width: 4em;
 }
 
 .delete-btn {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .site-go-btn {
-    width: auto;
-    height: auto;
-    padding: 4px;
-    padding-left: 12px;
-    padding-right: 12px;
-    background-color: transparent;
-    border: 2px solid var(--fontColor_sec);
-    border-radius: 4px;
+  width: auto;
+  height: auto;
+  padding: 4px;
+  padding-left: 12px;
+  padding-right: 12px;
+  background-color: transparent;
+  border: 2px solid var(--fontColor_sec);
+  border-radius: 4px;
 }
 
 @media screen and (max-width: 600px) {
-    .contacts-div {
-        width: calc(100% - 8px);
-        padding: 4px;
-        margin-left: 0;
-        margin-right: 0;
-    }
+  .contacts-div {
+    width: calc(100% - 8px);
+    padding: 4px;
+    margin-left: 0;
+    margin-right: 0;
+  }
 }

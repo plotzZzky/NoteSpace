@@ -13,59 +13,62 @@ import './Contacts.css'
 
 
 export default function Contacts() {
-    const [getToken, setToken] = useState(sessionStorage.getItem('token'));
-    const [getContacts, setContacts] = useState([]);
-    const [getUpdate, setUpdate] = useState("");
+  const [getToken, setToken] = useState(sessionStorage.getItem('token'));
+  const [getContacts, setContacts] = useState([]);
+  const [getUpdate, setUpdate] = useState("");
 
-    function check_login() {
-        if (getToken == undefined) {
-            window.location.replace("/login/");
-        } else {
-            get_all_contacts();
-        }
+  function check_login() {
+    if (getToken == undefined) {
+      window.location.replace("/login/");
+    } else {
+      get_all_contacts();
     }
+  }
 
-    // Sites
-    function get_all_contacts() {
-        let url = "http://127.0.0.1:8000/contacts/"
-        let data = {method: 'GET', 
-                    headers: {Authorization: 'Token '+ getToken}}
-        fetch(url, data)
-        .then((res) => res.json())
-        .then((data) =>{ setContacts(data['contacts']) })
+  // Sites
+  function get_all_contacts() {
+    let url = "http://127.0.0.1:8000/contacts/"
+    let data = {
+      method: 'GET',
+      headers: { Authorization: 'Token ' + getToken }
     }
+    fetch(url, data)
+      .then((res) => res.json())
+      .then((data) => { setContacts(data['contacts']) })
+  }
 
-    function delete_contact(contact_id) {
-        let url = `http://127.0.0.1:8000/contacts/delete/id=${contact_id}`
-        let data = {method: 'GET', 
-                    headers: {Authorization: 'Token '+ getToken}
-                    }
-        fetch(url, data)
-        .then((reponse) => reponse.json())
-        .then((data) => {
-            alert(data.text)
-            get_all_contacts()
-        })
+  function delete_contact(contact_id) {
+    let url = `http://127.0.0.1:8000/contacts/delete/id=${contact_id}`
+    let data = {
+      method: 'GET',
+      headers: { Authorization: 'Token ' + getToken }
     }
-            
+    fetch(url, data)
+      .then((reponse) => reponse.json())
+      .then((data) => {
+        alert(data.text)
+        get_all_contacts()
+      })
+  }
 
-    useEffect( () => {
-        check_login()
-    }, [getUpdate]);
+
+  useEffect(() => {
+    check_login()
+  }, [getUpdate]);
 
 
-    return (
-        <>
-            <NavBar></NavBar>
+  return (
+    <>
+      <NavBar></NavBar>
 
-            <div className="page">
-                <div className="contacts-div">
-                    <ContactForm Token={getToken} update={setUpdate}></ContactForm>
+      <div className="page">
+        <div className="contacts-div">
+          <ContactForm Token={getToken} update={setUpdate}></ContactForm>
 
-                    {getContacts.map((data) => (
-                        <ContactCard key={data.id} data={data} delete={() => delete_contact(data["id"])}></ContactCard>))}
-                </div>
-            </div>
-        </>
-    )
+          {getContacts.map((data) => (
+            <ContactCard key={data.id} data={data} delete={() => delete_contact(data["id"])}></ContactCard>))}
+        </div>
+      </div>
+    </>
+  )
 }
