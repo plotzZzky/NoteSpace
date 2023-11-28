@@ -9,3 +9,5 @@ class NotesModel(models.Model):
     text = models.CharField(max_length=2048)
     date = models.DateField()
     color = models.CharField(max_length=128)
+
+    objects = models.Manager()

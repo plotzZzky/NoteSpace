@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import Notes from './Notes'
+import './Notes.css'
 import '../index.css'
 
 

@@ -8,3 +8,5 @@ class SitesModel(models.Model):
     title = models.CharField(max_length=255)
     url = models.CharField(max_length=2048)
     color = models.CharField(max_length=255)
+
+    objects = models.Manager()

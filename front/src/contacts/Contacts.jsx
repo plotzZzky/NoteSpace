@@ -1,21 +1,12 @@
-import { useState, useEffect, SetState } from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faSave, faEarthAmerica } from '@fortawesome/free-solid-svg-icons'
-import profileImg from '../media/profile.webp'
-
-library.add(faSave, faEarthAmerica)
-
+import { useState, useEffect } from "react";
 import NavBar from "../elements/navbar";
 import ContactCard from "../elements/contactCard";
 import ContactForm from "../elements/contactForm";
-import './Contacts.css'
 
 
 export default function Contacts() {
   const [getToken, setToken] = useState(sessionStorage.getItem('token'));
   const [getContacts, setContacts] = useState([]);
-  const [getUpdate, setUpdate] = useState("");
 
   function check_login() {
     if (getToken == undefined) {
@@ -25,7 +16,7 @@ export default function Contacts() {
     }
   }
 
-  // Sites
+  // Contatos
   function get_all_contacts() {
     let url = "http://127.0.0.1:8000/contacts/"
     let data = {
@@ -34,27 +25,18 @@ export default function Contacts() {
     }
     fetch(url, data)
       .then((res) => res.json())
-      .then((data) => { setContacts(data['contacts']) })
+      .then((data) => { create_contacts_card(data['contacts']) })
   }
 
-  function delete_contact(contact_id) {
-    let url = `http://127.0.0.1:8000/contacts/delete/id=${contact_id}`
-    let data = {
-      method: 'GET',
-      headers: { Authorization: 'Token ' + getToken }
-    }
-    fetch(url, data)
-      .then((reponse) => reponse.json())
-      .then((data) => {
-        alert(data.text)
-        get_all_contacts()
-      })
+  function create_contacts_card(contacts) {
+    setContacts(contacts.map((data) => (
+      <ContactCard key={data.id} data={data} update={get_all_contacts}></ContactCard>
+      )))
   }
-
 
   useEffect(() => {
     check_login()
-  }, [getUpdate]);
+  }, []);
 
 
   return (
@@ -62,11 +44,11 @@ export default function Contacts() {
       <NavBar></NavBar>
 
       <div className="page">
-        <div className="contacts-div">
-          <ContactForm Token={getToken} update={setUpdate}></ContactForm>
+        <div className="cards-div">
+          <ContactForm Token={getToken} update={get_all_contacts}></ContactForm>
 
-          {getContacts.map((data) => (
-            <ContactCard key={data.id} data={data} delete={() => delete_contact(data["id"])}></ContactCard>))}
+          {getContacts}
+
         </div>
       </div>
     </>

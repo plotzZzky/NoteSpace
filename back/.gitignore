@@ -1,4 +1,8 @@
 .idea/
 /venv/
+*/__pycache__/*
+*/migrations/__pycache__/*
 
+#files
 *_initial.py
+000*

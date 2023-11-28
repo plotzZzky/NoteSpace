@@ -16,8 +16,8 @@
 - [x] Lista com notas, sites favoritos e contatos;
 - [x] Permite deletar as notas;
 - [x] Sites favoritos permite abrir a pagina em outra aba clickando no titulo;
-- [x] Contatos permite abrir o whatsapp web clickando no numero;
-- [x] Contatos permite enviar email clickando no respectivo campo;
+- [x] Contatos - permite abrir o whatsapp web clickando no numero;
+- [x] Contatos - permite enviar email clickando no respectivo campo;
 - [x] Mais em breve;
 
 

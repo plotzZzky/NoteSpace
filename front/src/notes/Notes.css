@@ -1,39 +1,31 @@
-.notes-div {
-  width: calc(100vw - 6em);
-  min-height: calc(100vh - 8em);
-  height: auto;
-  padding: 1em;
-  margin: auto;
-  margin-top: -5em;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  gap: 10px 0px;
-  position: relative;
+.note-margin {
+  flex: 0 1 25%;
+  height: 40vh;
 }
 
 .note-card {
-  width: min(400px, 80%);
-  height: 400px;
-  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  height: calc(40vh - 8px);
+  margin: 4px;
   background-color: rgb(182, 253, 206);
-  position: relative;
-  box-shadow: var(--shadow);
 }
 
 .note-title {
-  font-size: 1.2em;
-  font-weight: 600;
-  color: var(--fontColor_sec);
+  font-size: clamp(0.9em, 1.5vw, 1.2em);
+  font-weight: bold;
+  color: var(--fontColor_pri);
+  background-color: transparent;
+  text-align: center;
+  border: none;
 }
 
 .note-text {
-  width: calc(100% - 2em);
-  height: auto;
-  min-height: 300px;
-  padding: 1em;
-  font-size: 1.2em;
-  color: var(--fontColor_sec);
+  width: calc(100% - 2vw);
+  flex: 0 1 85%;
+  padding: 0.5vh 1vw;
+  font-size: clamp(0.8em, 1vw, 1em);
+  color: var(--fontColor_pri);
   background-color: transparent;
   border: none;
   resize: none;
@@ -42,34 +34,38 @@
 }
 
 .note-align-btns {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  display: inline-flex;
+  display: flex;
   justify-content: space-between;
-  width: 92%;
-  padding-left: 1em;
-  padding-right: 1em;
-  height: auto;
+  align-items: center;
+  margin: 0 1vw;
 }
 
-.delete-btn {
+.delete-btn,
+.note-save {
   cursor: pointer;
+  font-size: clamp(0.8em, 1vw, 1em);
 }
 
 .note-date {
-  color: var(--fontColor_sec);
+  color: var(--fontColor_pri);
+  font-size: clamp(0.8em, 1vw, 1em);
+  font-weight: bold;
 }
 
 .note-colorSelect {
   border: none;
-  height: 2em;
-  width: 4em;
+  height: 24px;
+  width: 40px;
 }
 
-.note-save {
-  cursor: pointer;
-  font-size: 1.2em;
+@media screen and (max-width: 800px) {
+  .note-margin {
+    flex: 0 1 33.33%;
+  }
 }
 
-@media screen and (max-width: 400px) {}
+@media screen and (max-width: 500px) {
+  .note-margin {
+    flex: 0 1 50%;
+  }
+}

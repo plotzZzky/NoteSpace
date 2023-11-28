@@ -19,7 +19,7 @@ export default defineConfig({
         login: resolve(root, 'login','index.html'),
         notes: resolve(root, 'notes','index.html'),
         contacts: resolve(root, 'contacts','index.html'),
-        sites: resolve(root, 'sites','index.html'),
+        websites: resolve(root, 'websites','index.html'),
       }
     }
   }

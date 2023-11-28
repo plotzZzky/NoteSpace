@@ -1,18 +1,13 @@
 import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { library } from '@fortawesome/fontawesome-svg-core'
 import { faNoteSticky, faHouse, faUser, faAddressBook, faEarthAmerica, faBars } from '@fortawesome/free-solid-svg-icons'
-
-
 import './navbar.css'
-
-library.add(faNoteSticky, faHouse, faUser, faAddressBook, faEarthAmerica, faBars)
 
 
 export default function NavBar() {
   const [getToken, setToken] = useState(sessionStorage.getItem('token'));
 
-  function OpenMenu() {
+  function open_menu() {
     let navbar = document.getElementsByClassName("menu")[0];
     if (navbar.className == "menu") {
       navbar.classList.add("responsive")
@@ -21,63 +16,94 @@ export default function NavBar() {
     }
   }
 
+  function close_menu() {
+    let navbar = document.getElementsByClassName("menu")[0];
+    navbar.classList.remove("responsive")
+  }
+
+  // Function to go
+  function go_home() {
+    if (location.pathname != '/') {
+    location.href = "/"
+    }
+    close_menu()
+  }
+
   function go_notes() {
     if (getToken == undefined) {
-      location.href = "/login/"
+      location.pathname = "/login/"
     } else {
-      location.href = "/notes/"
+      if (location.pathname != '/notes/') {
+      location.pathname = "/notes/"
+      }
     }
+    close_menu()
   }
 
   function go_sites() {
     if (getToken == undefined) {
-      location.href = "/login/"
+      location.pathname = "/login/"
     } else {
-      location.href = "/sites/"
+      if (location.pathname != '/websites/') {
+      location.pathname = "/websites/"
+      }
     }
+    close_menu()
   }
 
   function go_contacts() {
     if (getToken == undefined) {
-      location.href = "/login/"
+      location.pathname = "/login/"
     } else {
-      location.href = "/contacts/"
+      if (location.pathname != '/contacts/') {
+      location.pathname = "/contacts/"
+      }
     }
+    close_menu()
+  }
+
+  function go_login(){
+    if (getToken == undefined) {
+      location.pathname = "/login/"
+    } else {
+      location.pathname = "/notes/"
+    }
+    close_menu()
   }
 
   return (
     <div className="navbar">
 
       <div className='navbar-align'>
-        <div className="brand" onClick={() => location.href = "/"}>
-          <i className="fa-solid fa-house"></i>
-          <a className="brand-name"> <FontAwesomeIcon icon="fa-solid fa-note-sticky" className='icon-menu' /> NoteSpace</a>
+        <div className="brand" onClick={go_home}>
+          <i className={faHouse}></i>
+          <a className="brand-name"> <FontAwesomeIcon icon={faNoteSticky} className='icon-menu' /> NoteSpace</a>
         </div>
 
 
         <div className="menu" id="menu">
-          <a className="menu-icon" onClick={OpenMenu}>
-            <FontAwesomeIcon icon="fa-solid fa-bars fa-2xl" />
+          <a className="menu-icon" onClick={open_menu}>
+            <FontAwesomeIcon icon={faBars} />
           </a>
 
-          <div className="menu-item" onClick={() => location.href = "/"}>
-            <a><FontAwesomeIcon icon="fa-solid fa-house icon-menu" className='icon-menu' /> Inicio </a>
+          <div className="menu-item" onClick={go_home}>
+            <a><FontAwesomeIcon icon={faHouse} className='icon-menu' /> Inicio </a>
           </div>
 
           <div className="menu-item" onClick={go_notes}>
-            <a><FontAwesomeIcon icon="fa-solid fa-note-sticky" className='icon-menu' /> Notas </a>
+            <a><FontAwesomeIcon icon={faNoteSticky} className='icon-menu' /> Notas </a>
           </div>
 
           <div className="menu-item" onClick={go_sites}>
-            <a><FontAwesomeIcon icon="fa-solid fa-earth-americas" className='icon-menu' /> Sites </a>
+            <a><FontAwesomeIcon icon={faEarthAmerica} className='icon-menu' /> Sites </a>
           </div>
 
           <div className="menu-item" onClick={go_contacts}>
-            <a><FontAwesomeIcon icon="fa-solid fa-address-book" className='icon-menu' /> Contatos </a>
+            <a><FontAwesomeIcon icon={faAddressBook} className='icon-menu' /> Contatos </a>
           </div>
 
-          <div className="menu-item" onClick={() => location.href = "/login/"}>
-            <a><FontAwesomeIcon icon="fa-solid fa-user" className='icon-menu' /> Entrar </a>
+          <div className="menu-item" onClick={go_login}>
+            <a><FontAwesomeIcon icon={faUser} className='icon-menu' /> Entrar </a>
           </div>
 
         </div>

@@ -1,57 +1,47 @@
 import datetime
-from django.http.response import JsonResponse, HttpResponse
-from django.views.decorators.csrf import csrf_exempt
+from django.http.response import JsonResponse
 from rest_framework.decorators import permission_classes, api_view
 from rest_framework.permissions import IsAuthenticated
-import json
+from django.core.exceptions import ObjectDoesNotExist
 
 from .models import NotesModel
+from .serialize import serialize_note
 
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-@csrf_exempt
 def get_all_notes(request):
     try:
-        query = NotesModel.objects.filter(user=request.user)  # type:ignore
-    except NotesModel.DoesNotExist:  # type:ignore
+        query = NotesModel.objects.filter(user=request.user)
+    except ObjectDoesNotExist:
         query = {}
-    data = [serialize(item) for item in query]
-    return JsonResponse({"notes": data})
-
-
-def serialize(item):
-    note_id = item.id
-    title = item.title
-    text = item.text
-    date = item.date
-    color = item.color
-    item_dict = {'id': note_id, 'title': title, 'text': text, 'date': date, "color": color}
-    return item_dict
+    data = [serialize_note(item) for item in query]
+    return JsonResponse({"notes": data}, status=200)
 
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-@csrf_exempt
 def create_note(request):
     try:
-        file = json.loads(request.body)
-        title = file['title'].title()
-        text = file['text'].capitalize()
+        title = request.data.get('title', 'Nova Nota').title()
+        text = request.data['text'].capitalize()
         date = datetime.date.today()
-        color = file['color']
+        color = request.data.get('color', '#FFFFFF')
         user = request.user
         note = NotesModel(user=user, title=title, text=text, date=date, color=color)
         note.save()
-        return JsonResponse({"text": "Nota criada", "status": "200"})
-    except KeyError:
-        return JsonResponse({"text": "Formulario incorreto", "status": "406"})
+        return JsonResponse({"text": "Nota criada"}, status=200)
+    except (KeyError, ValueError):
+        return JsonResponse({"text": "Formulario incorreto"}, status=400)
 
 
-def delete_note(request, note_id):
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_note(request):
     try:
-        query = NotesModel.objects.get(pk=note_id)  # type:ignore
+        note_id = request.data['id']
+        query = NotesModel.objects.get(pk=note_id)
         query.delete()
-        return JsonResponse({"text": "Nota deletada", "status": "200"})
-    except NotesModel.DoesNotExist:  # type:ignore
-        return JsonResponse({"text": "Nota não encontrada", "status": "404"})
+        return JsonResponse({"text": "Nota deletada"}, status=200)
+    except (ObjectDoesNotExist, KeyError, ValueError):
+        return JsonResponse({"text": "Nota não encontrada"}, status=400)

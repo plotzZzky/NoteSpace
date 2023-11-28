@@ -1,18 +1,24 @@
-import React from 'react'
 import { useState, useEffect } from 'react';
 import NavBar from "../elements/navbar";
-import './login.css'
+import InputPwd from '../elements/inputs/inputPwd';
+import InputEmail from '../elements/inputs/inputEmail';
+import InputUser from '../elements/inputs/inputUser';
 
 
-export default function About() {
+export default function Login() {
   const [getLogin, setLogin] = useState(true);
   const [getToken, setToken] = useState(sessionStorage.getItem('token'));
 
   const [getUsername, setUsername] = useState("");
   const [getEmail, setEmail] = useState("");
-  const [getPassword1, setPassword1] = useState("");
-  const [getPassword2, setPassword2] = useState("")
+  const [getPassword, setPassword] = useState("");
+  const [getpwd, setPwd] = useState("")
 
+  //Validate
+  const [UserValid, setUserValid] = useState(false);
+  const [EmailValid, setEmailValid] = useState(false);
+  const [Pwd1Valid, setPwd1Valid] = useState(false);
+  const [Pwd2Valid, setPwd2Valid] = useState(false)
 
   function check_login() {
     if (getToken != undefined) {
@@ -23,56 +29,72 @@ export default function About() {
   function show_login() {
     let login = document.getElementById('loginTab');
     let signup = document.getElementById('signupTab');
-    if (getLogin === true) {
-      login.style.display = "none";
-      signup.style.display = "block";
-      setLogin(false)
+    login.style.display = getLogin? 'none' : 'flex'
+    signup.style.display = getLogin? 'flex' : 'none'
+    setLogin(getLogin? false : true)
+  }
+
+  function check_if_login_valid() {
+    if (Pwd1Valid && UserValid) {
+      loginFunc()
     } else {
-      login.style.display = "block";
-      signup.style.display = "none";
-      setLogin(true)
+      const tip = document.getElementById("LoginTip")
+      tip.innerText = "Prencha os dados de login"
     }
   }
 
   function loginFunc() {
     let url = `http://127.0.0.1:8000/users/login/`
-    let json = {
-      "username": getUsername,
-      "password": getPassword1
-    }
-    fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(json)
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        sessionStorage.setItem("token", data["token"])
-        setToken(sessionStorage.getItem("token"))
-      })
-  }
 
-  function SignUpFunc() {
-    let url = `http://127.0.0.1:8000/users/register/`
-    let json = {
-      "username": getUsername,
-      "email": getEmail,
-      "password1": getPassword1,
-      "password2": getPassword2,
-    }
-
-    let info = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(json)
-    }
+    const formData = new FormData();
+    formData.append("username", getUsername)
+    formData.append("password", getPassword)
+    let info = {method: 'POST',
+                body: formData}
 
     fetch(url, info)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data)
-        sessionStorage.setItem("token", data["token"])
-        setToken(sessionStorage.getItem("token"))
+        if (data.error) {
+          const tip = document.getElementById("LoginTip")
+          tip.innerText = data.error
+        } else {
+          sessionStorage.setItem("token", data["token"])
+          setToken(sessionStorage.getItem("token"))
+        }
+    })
+  }
+
+  function check_if_sign_valid() {
+    if (UserValid && EmailValid && Pwd1Valid && Pwd2Valid && Pwd1Valid === Pwd2Valid) {
+      SignUpFunc()
+    } else {
+      const tip = document.getElementById("SignTip")
+      tip.innerText = "Prencha os dados para se registar"
+    }
+  }
+
+  function SignUpFunc() {
+      let url = `http://127.0.0.1:8000/users/register/`
+
+      const formData = new FormData();
+      formData.append("username", getUsername);
+      formData.append("email", getEmail);
+      formData.append("password", getPassword);
+      formData.append("pwd", getpwd);
+
+      const info = {method: 'POST', body: formData}
+
+      fetch(url, info)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          const tip = document.getElementById("SignTip")
+          tip.innerText = data.error
+        } else {
+          sessionStorage.setItem("token", data["token"])
+          setToken(sessionStorage.getItem("token"))
+        }
       })
   }
 
@@ -83,33 +105,43 @@ export default function About() {
 
 
   return (
-    <>
+    <div className='page banner'>
       <NavBar></NavBar>
 
-      <div className="page">
+      <div className="login-page">
         <div className='login-div' id='loginTab'>
-          <p className='login-title'> Entrar </p>
+          <p className='login-title'> Bem vindo de volta!</p>
 
-          <input className='text-input' type='Text' name='username' placeholder='Nome do usuario' onChange={(e) => setUsername(e.target.value)}></input>
-          <input className='text-input' type='password' name='password' placeholder='Senha do usuario' onChange={(e) => setPassword1(e.target.value)}></input>
-          <button className='btn' onClick={loginFunc}> Entrar </button>
+          <div className='align-input'>
+            <InputUser username={setUsername} valid={UserValid} setValid={setUserValid} tip='LoginTip'></InputUser>
+            <InputPwd password={setPassword} valid={Pwd1Valid} setValid={setPwd1Valid} placeholder="Digite a senha" tip='LoginTip'></InputPwd>
+          </div>
+
+          <a className='login-tip' id='LoginTip'> </a>
+
+          <button className='btn btn-login' onClick={check_if_login_valid}> Entrar </button>
 
           <p className='login-text-link' onClick={show_login}> Cadastre-se</p>
         </div>
 
-        <div className='login-div' id='signupTab' style={{ display: 'none' }}>
-          <p className='login-title'> Cadastrar </p>
+        <div className='login-div' id='signupTab' style={{display: 'none'}}>
+          <p className='login-title'> Junte-se a nós! </p>
 
-          <input className='text-input' type='Text' name='username' placeholder='Nome do usuario' onChange={(e) => setUsername(e.target.value)}></input>
-          <input className='text-input' type='Email' name='email' placeholder='Email do usuario' onChange={(e) => setEmail(e.target.value)}></input>
-          <input className='text-input' type='password' name='password' placeholder='Senha do usuario' onChange={(e) => setPassword1(e.target.value)}></input>
-          <input className='text-input' type='password' name='password' placeholder='Confirme a senha' onChange={(e) => setPassword2(e.target.value)}></input>
-          <button className='btn' onClick={SignUpFunc}> Cadastrar </button>
+          <div className='align-input'>
+            <InputUser username={setUsername} valid={UserValid} setValid={setUserValid} tip='SignTip'></InputUser>
+            <InputEmail email={setEmail} valid={EmailValid} setValid={setEmailValid} tip='SignTip'></InputEmail>
+            <InputPwd password={setPassword} valid={Pwd1Valid} setValid={setPwd1Valid} placeholder="Digite a senha" tip='SignTip'></InputPwd>
+            <InputPwd password={setPwd} valid={Pwd2Valid} setValid={setPwd2Valid} placeholder="Comfirme a senha" tip='SignTip'></InputPwd>
+          </div>
 
-          <p className='login-text-link' onClick={show_login}> Entrar</p>
+          <a className='login-tip' id='SignTip'> </a>
+
+          <button className='btn btn-login' onClick={check_if_sign_valid}> Cadastrar </button>
+
+          <p className='login-text-link' onClick={show_login}> Entrar </p>
         </div>
       </div>
-    </>
+    </div>
 
   )
 }
