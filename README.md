@@ -3,7 +3,7 @@
 
 ## Salve suas ideias onde você estiver por que inspiração passa seus planos nâo...
 ### Site para salvar notas, contatos e sites favoritos em um banco de dados PostgreSql.
-### Backend feito com Django e o Frontend com Reacte vite.
+
 ![noteSpace](https://github.com/plotzZzky/NoteSpace/assets/12895974/e4c1047e-58fb-416e-aa47-3da75404714e)
 ![noteSpace_b](https://github.com/plotzZzky/NoteSpace/assets/12895974/5b88078e-797c-42ae-9b2b-7a46372021ba)
 ![noteSpace_c](https://github.com/plotzZzky/NoteSpace/assets/12895974/d67d7c9d-71ce-4fa1-96a5-c3720f3e68d1)
