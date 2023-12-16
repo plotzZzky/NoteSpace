@@ -6,5 +6,4 @@ def serialize_note(item):
     date = item.date
     color = item.color
     item_dict = {'id': note_id, 'title': title, 'text': text, 'date': date, "color": color}
-    print(item_dict)
     return item_dict
