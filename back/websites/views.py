@@ -26,8 +26,7 @@ def create_site(request):
         url = request.data['url']
         color = request.data.get('color', '#FFFFFF')
         user = request.user
-        note = SitesModel(user=user, title=title, url=url, color=color)
-        note.save()
+        SitesModel.objects.create(user=user, title=title, url=url, color=color)
         return JsonResponse({"text": "Site criado"}, status=200)
     except (KeyError, ValueError):
         return JsonResponse({"text": "Formulario incorreto"}, status=400)

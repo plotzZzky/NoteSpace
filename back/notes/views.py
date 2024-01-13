@@ -28,8 +28,7 @@ def create_note(request):
         date = datetime.date.today()
         color = request.data.get('color', '#FFFFFF')
         user = request.user
-        note = NotesModel(user=user, title=title, text=text, date=date, color=color)
-        note.save()
+        NotesModel.objects.create(user=user, title=title, text=text, date=date, color=color)
         return JsonResponse({"text": "Nota criada"}, status=200)
     except (KeyError, ValueError):
         return JsonResponse({"text": "Formulario incorreto"}, status=400)

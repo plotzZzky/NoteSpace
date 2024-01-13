@@ -29,9 +29,8 @@ def create_contact(request):
         social = request.data.get('social', '')
         color = request.data.get('color', '#FFFFFF')
         user = request.user
-        note = ContactsModel(user=user, firstname=firstname, lastname=lastname, telephone=telephone, email=email,
-                             social=social, color=color)
-        note.save()
+        note = ContactsModel.objects.create(user=user, firstname=firstname, lastname=lastname, telephone=telephone,
+                                            email=email, social=social, color=color)
         return JsonResponse({"text": "Contato criado"}, status=200)
     except (KeyError, ValueError):
         return JsonResponse({"text": "Formulario incorreto"}, status=400)

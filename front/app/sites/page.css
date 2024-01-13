@@ -1,0 +1,75 @@
+.cards {
+  margin-top: 1vh;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.site-margin {
+  flex: 0 1 25%;
+  height: 14vh;
+}
+
+.site-card {
+  display: flex;
+  flex-direction: column;
+  height: calc(14vh - 8px);
+  margin: 4px;
+  background-color: rgb(255, 255, 255);
+}
+
+.site-card * {
+  color: var(--fontColor_sec);
+}
+
+.site-title {
+  font-size: clamp(0.9em, 1.5vw, 1.2em);
+  font-weight: 600;
+  text-align: center;
+  border: none;
+  background-color: transparent;
+  margin: 4px;
+}
+
+.url-input {
+  font-size: clamp(0.8em, 1vw, 1em);
+  margin: 1vh 4px 0;
+  height: 4vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border: none;
+  background-color: transparent;
+}
+
+.site-align-btns {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: auto 1vw 2px;
+}
+
+.site-save,
+.delete-btn {
+  cursor: pointer;
+  font-size: clamp(1em, 1vw, 1.1em);
+}
+
+.site-colorSelect {
+  border: none;
+  height: 24px;
+  width: 40px;
+}
+
+@media screen and (max-width: 800px) {
+  .site-margin {
+    flex: 0 1 50%;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .site-margin {
+    flex: 0 1 100%;
+  }
+}

@@ -1,0 +1,80 @@
+.cards {
+  margin-top: 1vh;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.note-margin {
+  flex: 0 1 25%;
+  height: 40vh;
+}
+
+.note-card {
+  display: flex;
+  flex-direction: column;
+  height: calc(40vh - 8px);
+  margin: 4px;
+  background-color: rgb(182, 253, 206);
+}
+
+.note-title {
+  font-size: clamp(0.9em, 1.5vw, 1.2em);
+  font-weight: bold;
+  color: var(--fontColor_sec);
+  background-color: transparent;
+  text-align: center;
+  border: none;
+  margin: 4px;
+}
+
+.note-text {
+  flex: 0 1 90%;
+  padding: 0.5vh 1vw;
+  margin: 5px;
+  font-size: clamp(0.8em, 1vw, 1em);
+  color: var(--fontColor_sec);
+  background-color: transparent;
+  border: none;
+  resize: none;
+  white-space: pre-line;
+  text-align: left;
+}
+
+.note-align-btns {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 1vw;
+}
+
+.delete-btn *,
+.note-save * {
+  cursor: pointer;
+  font-size: clamp(0.8em, 1vw, 1em);
+  color: var(--fontColor_sec);
+}
+
+.note-date {
+  color: var(--fontColor_sec);
+  font-size: clamp(0.8em, 1vw, 1em);
+  font-weight: bold;
+}
+
+.note-colorSelect {
+  border: none;
+  height: 24px;
+  width: 40px;
+}
+
+@media screen and (max-width: 800px) {
+  .note-margin {
+    flex: 0 1 33.33%;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .note-margin {
+    flex: 0 1 50%;
+  }
+}
