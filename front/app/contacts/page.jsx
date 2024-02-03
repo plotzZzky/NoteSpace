@@ -1,10 +1,8 @@
 'use client'
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import NavBar from "../elements/navbar";
-import ContactCard from "../elements/contactCard";
-import ContactForm from "../elements/contactForm";
-
+import ContactCard from "@comps/contactCard";
+import ContactForm from "@comps/contactForm";
 
 export default function Contacts() {
   const [getToken, setToken] = useState(typeof window !== 'undefined'? sessionStorage.getItem('token') : null);
@@ -95,8 +93,6 @@ export default function Contacts() {
 
   return (
     <>
-      <NavBar></NavBar>
-
       <div className="page">
         <div className="cards">
           <ContactForm Token={getToken} update={getAllContacts}></ContactForm>

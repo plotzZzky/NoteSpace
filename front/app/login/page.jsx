@@ -1,12 +1,11 @@
 'use client'
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import NavBar from "../elements/navbar";
-import InputPwd from '../elements/inputs/inputPwd';
-import InputEmail from '../elements/inputs/inputEmail';
-import InputUser from '../elements/inputs/inputUser';
-import InputAnswer from '../elements/inputs/inputAnswer';
-import InputQuestion from '../elements/inputs/inputQuestion';
+import InputPwd from '@comp/inputs/inputPwd';
+import InputEmail from '@comp/inputs/inputEmail';
+import InputUser from '@comp/inputs/inputUser';
+import InputAnswer from '@comp/inputs/inputAnswer';
+import InputQuestion from '@comp/inputs/inputQuestion';
 
 
 export default function Login() {
@@ -144,7 +143,6 @@ export default function Login() {
 
   return (
     <>
-    <NavBar></NavBar>
       <div className='page'>
         <div className="login-page">
           <div className="login-alert" id='loginAlert'>

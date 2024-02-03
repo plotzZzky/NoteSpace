@@ -1,11 +1,9 @@
 'use client'
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import NavBar from "../elements/navbar";
-import InputPwd from '../elements/inputs/inputPwd';
-import InputUser from '../elements/inputs/inputUser';
-import InputAnswer from '../elements/inputs/inputAnswer';
-
+import InputPwd from '@comp/inputs/inputPwd';
+import InputUser from '@comp/inputs/inputUser';
+import InputAnswer from '@comp/inputs/inputAnswer';
 
 export default function Login() {
   const [getToken, setToken] = useState(typeof window !== 'undefined'? sessionStorage.getItem('token') : undefined);
@@ -87,7 +85,6 @@ export default function Login() {
 
   return (
     <>
-    <NavBar></NavBar>
       <div className='page'>
         <div className="login-page">
 

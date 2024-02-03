@@ -142,10 +142,3 @@ def receive_your_question(request):
         return JsonResponse({"question": question}, status=200)
     except (KeyError, ValueError, ObjectDoesNotExist):
         return JsonResponse({"msg": "Usuario não encontrado"}, status=400)
-
-
-# Esse end point é usado pelo cdn, para permitir o usuario acessar o back
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def validate_token(request):
-    return JsonResponse({'message': 'Token is valid'}, status=200)

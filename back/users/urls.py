@@ -9,5 +9,4 @@ urlpatterns = [
     path('update/', views.update_user),
     path('recovery/', views.recovery_password),
     path('question/', views.receive_your_question),
-    path('validate/', views.validate_token),
 ]

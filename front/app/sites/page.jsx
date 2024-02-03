@@ -3,9 +3,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFloppyDisk } from '@fortawesome/free-solid-svg-icons'
-import NavBar from "../elements/navbar";
-import SiteCard from "../elements/siteCard";
-
+import SiteCard from "@comps/siteCard";
 
 export default function Sites() {
   const [getToken, setToken] = useState(typeof window !== 'undefined'? sessionStorage.getItem('token') : null);
@@ -96,8 +94,6 @@ export default function Sites() {
 
   return (
     <>
-      <NavBar></NavBar>
-
       <div className="page">
         <div className="cards">
         <div className="site-margin">

@@ -3,8 +3,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFloppyDisk } from '@fortawesome/free-solid-svg-icons'
-import NavBar from "../elements/navbar";
-import NoteCard from '../elements/noteCard'
+import NoteCard from '@comps/noteCard'
 
 
 export default function Notes() {
@@ -99,8 +98,6 @@ export default function Notes() {
 
   return (
     <>
-      <NavBar></NavBar>
-
       <div className="page">
         <div className="cards">
           <div className="note-margin">
