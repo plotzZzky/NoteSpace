@@ -46,7 +46,7 @@ export default function NavBar() {
   };
 
   const LOGIN = () => {
-    return getToken === null? (
+    return getToken !== null? (
       <div className="menu-item" onClick={goNotes}>
         <a><FontAwesomeIcon icon={faUser} className='icon-menu' /> Entrar </a>
       </div>

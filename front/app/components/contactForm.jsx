@@ -39,7 +39,7 @@ export default function ContactForm(props) {
   }
 
   function save_contact() {
-    let url = "http://127.0.0.1:8000/contacts/new/"
+    const url = "http://127.0.0.1:8000/contacts/"
 
     const formData = new FormData();
     formData.append('firstname', getFirstName);
@@ -59,12 +59,12 @@ export default function ContactForm(props) {
       .then(() => {
         let n = Math.random()
         props.update(n)
-        set_form_default()
+        setToDefault()
       })
   }
 
   // retorna os valores do form para os padrão
-  function set_form_default() {
+  function setToDefault() {
     const firstname = 'Nome'
     const lastName = 'Sobrenome'
     const telephone = 'Telefone'

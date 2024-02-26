@@ -31,7 +31,7 @@ export default function Contacts() {
     }
     fetch(url, data)
       .then((res) => res.json())
-      .then((data) => { createContactsCard(data['contacts']) }
+      .then((data) => { createContactsCard(data) }
       )
   }
 
@@ -40,50 +40,6 @@ export default function Contacts() {
       contacts.map((data) => (
         <ContactCard key={data.id} data={data} update={getAllContacts} ></ContactCard>))
     )
-  }
-
-  function saveNewContacts() {
-    let url = "http://127.0.0.1:8000/contacts/new/"
-    const formData = new FormData();
-    formData.append("title", getTitle);
-    formData.append("text", getText);
-    formData.append("color", getColor)
-
-    const data = {
-      method: 'POST',
-      headers: { Authorization: 'Token ' + getToken },
-      body: formData
-    }
-
-    fetch(url, data)
-      .then(() => {
-        setFormDefault();
-        getAllContacts();
-      });
-  }
-
-  // retorna os valores do form para os padrão
-  function setFormDefault() {
-    setTitle('Titulo da nota')
-    setText('Nota de teste')
-    setColor('')
-    document.getElementById("TitleInput").innerText = getTitle
-  }
-
-  // Sets
-  function changeTitle(event) {
-    const value = event.target.textContent
-    changeTitle(value)
-  }
-
-  function changeText(event) {
-    const value = event.target.value
-    setText(value)
-  }
-
-  function changeColor(event) {
-    const value = event.target.value
-    setColor(value)
   }
 
   useEffect(() => {

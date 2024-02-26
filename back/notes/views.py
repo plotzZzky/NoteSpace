@@ -1,46 +1,32 @@
-import datetime
-from django.http.response import JsonResponse
-from rest_framework.decorators import permission_classes, api_view
+from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.viewsets import ModelViewSet
+from rest_framework import status
+import datetime
 
 from .models import NotesModel
-from .serialize import serialize_note
+from .serializer import NoteSerializer
 
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def get_all_notes(request):
-    try:
+class NoteView(ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = NotesModel.objects.all()
+    serializer_class = NoteSerializer
+
+    def list(self, request, *args, **kwargs):
         query = NotesModel.objects.filter(user=request.user)
-    except ObjectDoesNotExist:
-        query = {}
-    data = [serialize_note(item) for item in query]
-    return JsonResponse({"notes": data}, status=200)
+        serializer = self.get_serializer(query, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
+    def create(self, request, *args, **kwargs):
+        try:
+            title = request.data.get('title', 'Nova Nota').title()
+            text = request.data['text'].capitalize()
+            date = datetime.date.today()
+            color = request.data.get('color', '#FFFFFF')
+            user = request.user
+            NotesModel.objects.create(user=user, title=title, text=text, date=date, color=color)
+            return Response({"text": "Nota criada"}, status=status.HTTP_200_OK)
+        except (KeyError, ValueError):
+            return Response({"text": "Formulario incorreto"}, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def create_note(request):
-    try:
-        title = request.data.get('title', 'Nova Nota').title()
-        text = request.data['text'].capitalize()
-        date = datetime.date.today()
-        color = request.data.get('color', '#FFFFFF')
-        user = request.user
-        NotesModel.objects.create(user=user, title=title, text=text, date=date, color=color)
-        return JsonResponse({"text": "Nota criada"}, status=200)
-    except (KeyError, ValueError):
-        return JsonResponse({"text": "Formulario incorreto"}, status=400)
-
-
-@api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
-def delete_note(request):
-    try:
-        note_id = request.data['id']
-        query = NotesModel.objects.get(pk=note_id)
-        query.delete()
-        return JsonResponse({"text": "Nota deletada"}, status=200)
-    except (ObjectDoesNotExist, KeyError, ValueError):
-        return JsonResponse({"text": "Nota não encontrada"}, status=400)

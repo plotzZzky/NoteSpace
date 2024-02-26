@@ -1,9 +1,6 @@
-from django.urls import path
+from rest_framework.routers import DefaultRouter
 
 from . import views
 
-urlpatterns = [
-    path('', views.get_all_contacts, name='get_all_contacts'),
-    path('new/', views.create_contact, name='create_contact'),
-    path('del/', views.delete_contact, name='delete_contact'),
-]
+contacts_router = DefaultRouter()
+contacts_router.register(r'', views.ContactView, basename='contacts')

@@ -33,7 +33,9 @@ export default function Notes() {
     }
     fetch(url, data)
       .then((res) => res.json())
-      .then((data) => { createNotesCard(data['notes']) })
+      .then((data) => { 
+        createNotesCard(data) 
+      })
   }
 
   function createNotesCard(notes) {
@@ -48,7 +50,7 @@ export default function Notes() {
   }
 
   function saveNewNote() {
-    let url = "http://127.0.0.1:8000/notes/new/"
+    let url = "http://127.0.0.1:8000/notes/"
     const formData = new FormData();
     formData.append("title", getTitle);
     formData.append("text", getText);

@@ -1,9 +1,6 @@
-from django.urls import path
+from rest_framework.routers import DefaultRouter
 
 from . import views
 
-urlpatterns = [
-    path('', views.get_all_sites, name='get_all_sites'),
-    path('new/', views.create_site, name='create_site'),
-    path('del/', views.delete_site, name='delete_site'),
-]
+website_router = DefaultRouter()
+website_router.register(r'', views.WebsiteView, basename='websites')

@@ -1,44 +1,29 @@
-from django.http.response import JsonResponse
-from rest_framework.decorators import permission_classes, api_view
+from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.viewsets import ModelViewSet
+from rest_framework import status
 
-from .models import SitesModel
-from .serialize import serialize_website
-
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def get_all_sites(request):
-    try:
-        query = SitesModel.objects.filter(user=request.user)
-    except ObjectDoesNotExist:
-        query = {}
-    data = [serialize_website(item) for item in query]
-    return JsonResponse({"sites": data}, status=200)
+from .models import WebsiteModel
+from .serializer import WebSiteSerializer
 
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def create_site(request):
-    try:
-        title = request.data.get('title', 'Novo site').title()
-        url = request.data['url']
-        color = request.data.get('color', '#FFFFFF')
-        user = request.user
-        SitesModel.objects.create(user=user, title=title, url=url, color=color)
-        return JsonResponse({"text": "Site criado"}, status=200)
-    except (KeyError, ValueError):
-        return JsonResponse({"text": "Formulario incorreto"}, status=400)
+class WebsiteView(ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = WebsiteModel.objects.all()
+    serializer_class = WebSiteSerializer
 
+    def list(self, request, *args, **kwargs):
+        query = WebsiteModel.objects.filter(user=request.user)
+        serializer = self.get_serializer(query, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-@api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
-def delete_site(request):
-    try:
-        site_id = request.data['id']
-        query = SitesModel.objects.get(pk=site_id)
-        query.delete()
-        return JsonResponse({"text": "Site deletado"}, status=200)
-    except (ObjectDoesNotExist, KeyError, ValueError):
-        return JsonResponse({"text": "Site não encontrado"}, status=400)
+    def create(self, request, *args, **kwargs):
+        try:
+            title = request.data.get('title', 'Novo site').title()
+            url = request.data['url']
+            color = request.data.get('color', '#FFFFFF')
+            user = request.user
+            WebsiteModel.objects.create(user=user, title=title, url=url, color=color)
+            return Response({"text": "Site criado"}, status=status.HTTP_200_OK)
+        except (KeyError, ValueError):
+            return Response({"text": "Formulario incorreto"}, status=status.HTTP_400_BAD_REQUEST)

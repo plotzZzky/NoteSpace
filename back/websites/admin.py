@@ -1,5 +1,5 @@
 from django.contrib import admin
 
-from .models import SitesModel
+from .models import WebsiteModel
 
-admin.site.register(SitesModel)
+admin.site.register(WebsiteModel)

@@ -1,48 +1,33 @@
-from django.http.response import JsonResponse
-from rest_framework.decorators import permission_classes, api_view
+from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.viewsets import ModelViewSet
+from rest_framework import status
 
-from .models import ContactsModel
-from .serialize import serialize_contact
-
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def get_all_contacts(request):
-    try:
-        query = ContactsModel.objects.filter(user=request.user)
-    except ObjectDoesNotExist:
-        query = {}
-    data = [serialize_contact(item) for item in query]
-    return JsonResponse({"contacts": data}, status=200)
+from .models import ContactModel
+from .serializer import ContactSerializer
 
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def create_contact(request):
-    try:
-        firstname = request.data['firstname']
-        lastname = request.data.get('lastname', '')
-        telephone = request.data.get('telephone', '')
-        email = request.data['email']
-        social = request.data.get('social', '')
-        color = request.data.get('color', '#FFFFFF')
-        user = request.user
-        note = ContactsModel.objects.create(user=user, firstname=firstname, lastname=lastname, telephone=telephone,
-                                            email=email, social=social, color=color)
-        return JsonResponse({"text": "Contato criado"}, status=200)
-    except (KeyError, ValueError):
-        return JsonResponse({"text": "Formulario incorreto"}, status=400)
+class ContactView(ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = ContactModel.objects.all()
+    serializer_class = ContactSerializer
 
+    def list(self, request, *args, **kwargs):
+        query = ContactModel.objects.filter(user=request.user)
+        serializer = self.get_serializer(query, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-@api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
-def delete_contact(request):
-    try:
-        contact_id = request.data['id']
-        query = ContactsModel.objects.get(pk=contact_id)
-        query.delete()
-        return JsonResponse({"text": "Contato deletado"}, status=200)
-    except (ObjectDoesNotExist, ValueError, KeyError):
-        return JsonResponse({"text": "Contato não encontrado"}, status=400)
+    def create(self, request, *args, **kwargs):
+        try:
+            firstname = request.data['firstname']
+            lastname = request.data.get('lastname', '')
+            telephone = request.data.get('telephone', '')
+            email = request.data['email']
+            social = request.data.get('social', '')
+            color = request.data.get('color', '#FFFFFF')
+            user = request.user
+            ContactModel.objects.create(user=user, firstname=firstname, lastname=lastname, telephone=telephone,
+                                        email=email, social=social, color=color)
+            return Response({"text": "Contato criado"}, status=status.HTTP_200_OK)
+        except (KeyError, ValueError):
+            return Response({"text": "Formulario incorreto"}, status=status.HTTP_400_BAD_REQUEST)

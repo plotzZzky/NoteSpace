@@ -32,7 +32,7 @@ export default function Sites() {
     }
     fetch(url, data)
       .then((res) => res.json())
-      .then((data) => { createSitesCard(data['sites']) }
+      .then((data) => { createSitesCard(data) }
       )
   }
 
@@ -44,7 +44,7 @@ export default function Sites() {
   }
 
   function saveNewSite() {
-    let url = "http://127.0.0.1:8000/sites/new/"
+    let url = "http://127.0.0.1:8000/sites/"
     const formData = new FormData();
     formData.append("title", getTitle);
     formData.append("url", getUrl);

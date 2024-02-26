@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import ContactsModel
+from .models import ContactModel
 
 
-admin.site.register(ContactsModel)
+admin.site.register(ContactModel)

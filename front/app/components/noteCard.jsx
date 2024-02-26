@@ -15,15 +15,12 @@ export default function NoteCard(props) {
   }
 
   function deleteNote(event) {
-    let url = 'http://127.0.0.1:8000/notes/del/'
-
-    const formData = new FormData();
-    formData.append("id", props.data.id);
+    const noteId = props.data.id
+    const url = `http://127.0.0.1:8000/notes/${noteId}/`
 
     const data = {
       method: 'DELETE',
       headers: { Authorization: 'Token ' + getToken },
-      body: formData
     }
 
     fetch(url, data)
