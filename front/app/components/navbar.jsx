@@ -1,20 +1,20 @@
 'use client'
-import { useState } from 'react'
+import { useEffect } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faBars, faHome, faQuestion, faUsers, faNoteSticky, faEarthAmerica, faAddressBook, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
+import { useAuth } from '@comps/authContext'
 import './navbar.css'
 
 
 export default function NavBar() {
-  const [getToken, setToken] = useState(typeof window !== 'undefined'? sessionStorage.getItem('token') : null);
-
+  const [token, updateToken] = useAuth();
   const router = useRouter();
   const getPath = usePathname();
 
   // Função que abre o menu no modo responsivo
   function openResponsiveMenu() {
-    let navbar = document.getElementsByClassName("menu")[0];
+    const navbar = document.getElementsByClassName("menu")[0];
     if (navbar.className == "menu") {
       navbar.classList.add("responsive");
     } else {
@@ -46,12 +46,12 @@ export default function NavBar() {
   };
 
   const LOGIN = () => {
-    return getToken !== null? (
-      <div className="menu-item" onClick={goNotes}>
+    return token === null? (
+      <div className="menu-item" onClick={goLogin}>
         <a><FontAwesomeIcon icon={faUser} className='icon-menu' /> Entrar </a>
       </div>
     ) : (
-      <div className="menu-item" onClick={goLogOut}>
+      <div className="menu-item" onClick={goLogin}>
         <a><FontAwesomeIcon icon={faRightFromBracket} className='icon-menu' /> Sair </a>
       </div>
     )
@@ -79,7 +79,7 @@ export default function NavBar() {
 
   //Função generica para redirecionamento, se tokne for null redireciona para /login do contrario para a pagina passada como parametro
   function genericGoTo(value) {
-    if (getToken !== null && typeof getToken === 'string') {
+    if (token !== null && typeof token === 'string') {
       if (getPath !== value) {
         router.push(value);
       }
@@ -106,9 +106,14 @@ export default function NavBar() {
   };
 
   // Faz logout no front
-  function goLogOut() {
-    sessionStorage.removeItem("token")
-    router.push("/")
+  function goLogin() {
+    if (token === null) {
+      router.push("/login")
+    } else {
+      sessionStorage.removeItem("token")
+      updateToken(null)
+      router.push('/')
+    }
   }
 
   // Mostra o alerta de login
@@ -119,6 +124,10 @@ export default function NavBar() {
       alert.style.visibility = 'hidden';
     }, 2000);
   }
+
+  useEffect(() => {
+    updateToken(sessionStorage.getItem('token') || null)
+  }, [])
 
   return (
     <nav>

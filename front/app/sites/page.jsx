@@ -4,15 +4,16 @@ import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFloppyDisk } from '@fortawesome/free-solid-svg-icons'
 import SiteCard from "@comps/siteCard";
+import { useAuth } from '@comps/authContext'
 
 export default function Sites() {
-  const [getToken, setToken] = useState(typeof window !== 'undefined'? sessionStorage.getItem('token') : null);
+  const [getToken, setToken] = useAuth();
   const router = useRouter();
 
   const [getSitesCard, setSitesCard] = useState([]);
 
   const [getTitle, setTitle] = useState("Nome do site");
-  const [getUrl, setUrl] = useState("Url do site");
+  const [getUrl, setUrl] = useState("https://www.example.com/");
   const [getColor, setColor] = useState("");
 
   function checkLogin() {
@@ -36,10 +37,10 @@ export default function Sites() {
       )
   }
 
-  function createSitesCard(sites) {
+  function createSitesCard(sites, index) {
     setSitesCard(
       sites.map((data) => (
-        <SiteCard key={data.id} data={data} update={getAllSites} ></SiteCard>))
+        <SiteCard key={index} data={data} update={getAllSites} ></SiteCard>))
     )
   }
 

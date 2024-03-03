@@ -3,9 +3,10 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import ContactCard from "@comps/contactCard";
 import ContactForm from "@comps/contactForm";
+import { useAuth } from '@comps/authContext'
 
 export default function Contacts() {
-  const [getToken, setToken] = useState(typeof window !== 'undefined'? sessionStorage.getItem('token') : null);
+  const [getToken, setToken] = useAuth();
   const router = useRouter();
 
   const [getContactsCard, setContactsCard] = useState([]);
@@ -24,8 +25,8 @@ export default function Contacts() {
 
   // Contacts
   function getAllContacts() {
-    let url = "http://127.0.0.1:8000/contacts/"
-    let data = {
+    const url = "http://127.0.0.1:8000/contacts/"
+    const data = {
       method: 'GET',
       headers: { Authorization: 'Token ' + getToken}
     }

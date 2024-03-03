@@ -58,6 +58,7 @@
 
 .div-input {
   width: calc(100% - 5vw);
+  padding: 2px;
   margin: 1vh 2vw 0;
   background-color: #7c7c7c;
   position: relative;

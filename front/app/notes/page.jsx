@@ -4,10 +4,11 @@ import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFloppyDisk } from '@fortawesome/free-solid-svg-icons'
 import NoteCard from '@comps/noteCard'
+import { useAuth } from '@comps/authContext'
 
 
 export default function Notes() {
-  const [getToken, setToken] = useState(typeof window !== 'undefined'? sessionStorage.getItem('token') : null);
+  const [token, updateToken] = useAuth();
   const router = useRouter();
 
   const [getNotesCard, setNotesCard] = useState([]);
@@ -17,7 +18,8 @@ export default function Notes() {
   const [getColor, setColor] = useState("");
 
   function checkLogin() {
-    if (getToken !== null && typeof getToken === 'string') {
+    console.log(token)
+    if (token !== null && typeof token === 'string') {
       getAllNotes()
     } else {
       router.push("/login/");
@@ -29,7 +31,7 @@ export default function Notes() {
     let url = "http://127.0.0.1:8000/notes/"
     let data = {
       method: 'GET',
-      headers: { Authorization: 'Token ' + getToken}
+      headers: { Authorization: 'Token ' + token}
     }
     fetch(url, data)
       .then((res) => res.json())
@@ -58,7 +60,7 @@ export default function Notes() {
 
     const data = {
       method: 'POST',
-      headers: { Authorization: 'Token ' + getToken },
+      headers: { Authorization: 'Token ' + token },
       body: formData
     }
 

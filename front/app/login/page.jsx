@@ -1,16 +1,17 @@
 'use client'
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import InputPwd from '@comp/inputs/inputPwd';
-import InputEmail from '@comp/inputs/inputEmail';
-import InputUser from '@comp/inputs/inputUser';
-import InputAnswer from '@comp/inputs/inputAnswer';
-import InputQuestion from '@comp/inputs/inputQuestion';
+import InputPwd from '@comps/inputs/inputPwd';
+import InputEmail from '@comps/inputs/inputEmail';
+import InputUser from '@comps/inputs/inputUser';
+import InputAnswer from '@comps/inputs/inputAnswer';
+import InputQuestion from '@comps/inputs/inputQuestion';
+import { useAuth } from '@comps/authContext'
 
 
 export default function Login() {
   const [getLogin, setLogin] = useState(true);
-  const [getToken, setToken] = useState(typeof window !== 'undefined'? sessionStorage.getItem('token') : null);
+  const [token, updateToken] = useAuth();
   const router = useRouter();
 
   const [getUsername, setUsername] = useState("");
@@ -29,7 +30,7 @@ export default function Login() {
   const [AnswerValid, setAnswerValid] = useState(false)
 
   function checkLogin() {
-    if (getToken !== null && typeof getToken === 'string')  {
+    if (token !== null && typeof token === 'string')  {
       router.push("/notes");
     }
   }
@@ -60,27 +61,29 @@ export default function Login() {
 
   // Função para fazer login
   function loginFunc() {
-    let url = `http://127.0.0.1:8000/users/login/`
+    const url = `http://127.0.0.1:8000/users/login/`
 
     const formData = new FormData();
     formData.append("username", getUsername)
     formData.append("password", getPassword)
-    let info = {method: 'POST',
-                body: formData}
+    const info = {
+      method: 'POST',
+      body: formData
+    }
 
     fetch(url, info)
       .then((res) => res.json())
       .then((data) => {
-        if (data.msg) {
-          const tip = document.getElementById("LoginTip")
-          tip.innerText = data.msg
-        } else {
-          sessionStorage.setItem("token", data.token)
-          setToken(data.token)
+        if (data.token) {
+          updateToken(data.token)
           router.push('/notes')
+        } else {
+          const tip = document.getElementById("LoginTip")
+          tip.innerText = data.error
         }
-    })
+      })
   }
+
 
   // Verifica se os campos de cadastro estão preenchidas com informções validas
   function checkIfSignIsValid() {
@@ -94,51 +97,36 @@ export default function Login() {
 
   // Função para registar um novo usuario, envia o form com as informações (exceto imagem) e recebe o nome randonizado da imagem do usuario
   function SignUpFunc() {
-      let url = `http://127.0.0.1:8000/users/register/`
+    const url = `http://127.0.0.1:8000/users/register/`
 
-      const formData = new FormData();
-      formData.append("username", getUsername);
-      formData.append("email", getEmail);
-      formData.append("password", getPassword);
-      formData.append("pwd", getpwd);
-      formData.append("question", getQuestion)
-      formData.append("answer", getAnswer)
+    const formData = new FormData();
+    formData.append("username", getUsername);
+    formData.append("email", getEmail);
+    formData.append("password", getPassword);
+    formData.append("pwd", getpwd);
+    formData.append("question", getQuestion)
+    formData.append("answer", getAnswer)
 
-      const requestData = {
-        method: 'POST', body: formData
-      }
+    const requestData = {
+      method: 'POST', body: formData
+    }
 
-      fetch(url, requestData)
-      .then(async (res) => {
-        if (res.status === 200) {
-          return res.json();
-        } else {
-          const data = await res.json();
-          throw new Error(`${data.msg} status: ${res.status}`);
-        }
-      })
-      
+    fetch(url, requestData)
+      .then((res) =>  res.json())
       .then((data) => {
-        if (data.msg) {
+        if (data.token) {
+          updateToken(data.token)
+          router.push('/notes')
+        } else {
           const tip = document.getElementById("SignTip")
           tip.innerText = data.msg
-        } else {
-          sessionStorage.setItem("token", data.token)
-          setToken(sessionStorage.getItem("token"))
-          router.push('/notes')
         }
       })
-
-      .catch((error) => {
-        alert(error.message)
-        console.log(error.message);
-      });
   }
-
 
   useEffect(() => {
     checkLogin()
-  }, [getToken]);
+  }, [token]);
 
 
   return (
