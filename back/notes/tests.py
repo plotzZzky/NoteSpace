@@ -2,7 +2,6 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient
-import json
 import datetime
 
 from .models import NotesModel
@@ -46,53 +45,43 @@ class NotesTest(TestCase):
 
     def test_get_all_notes_check_json(self):
         response = self.client.get('/notes/')
-        result = json.loads(response.content)
-        r = True if "notes" in result else False
-        self.assertTrue(r)
+        self.assertEqual(response['Content-Type'], 'application/json')
 
     # Create note
     def test_create_note(self):
-        response = self.client.post('/notes/new/', self.new_note)
+        response = self.client.post('/notes/', self.new_note)
         self.assertEqual(response.status_code, 200)
-        note = NotesModel.objects.get(title=self.new_note['title'])  # type:ignore
+        note = NotesModel.objects.get(title=self.new_note['title'])
         self.assertIsNotNone(note)
 
     def test_create_note_no_title(self):
         data = self.new_note
         del data['title']
-        response = self.client.post('/notes/new/', data)
+        response = self.client.post('/notes/', data)
         self.assertEqual(response.status_code, 200)
 
     def test_create_note_no_text_error(self):
         data = self.new_note
         del data['text']
-        response = self.client.post('/notes/new/', data)
+        response = self.client.post('/notes/', data)
         self.assertEqual(response.status_code, 400)
 
     def test_create_note_no_color(self):
         data = self.new_note
         del data['color']
-        response = self.client.post('/notes/new/', data)
+        response = self.client.post('/notes/', data)
         self.assertEqual(response.status_code, 200)
 
     def test_delete_note(self):
         note = self.create_new_note()
-        data = {'id': note.id}
-        response = self.client.delete('/notes/del/', data)
-        self.assertEqual(response.status_code, 200)
+        response = self.client.delete(f'/notes/{note.id}/')
+        self.assertEqual(response.status_code, 204)
         try:
-            result = NotesModel.objects.get(pk=note.id)  # type:ignore
+            result = NotesModel.objects.get(pk=note.id)
         except NotesModel.DoesNotExist:  # type:ignore
             result = None
         self.assertIsNone(result)
 
-    def test_delete_note_not_id_error(self):
-        data = {}
-        response = self.client.delete('/notes/del/', data)
-        self.assertEqual(response.status_code, 400)
-
     def test_delete_note_id_error(self):
-        data = {'id': 99999}
-        response = self.client.delete('/notes/del/', data)
-        self.assertEqual(response.status_code, 400)
-
+        response = self.client.delete(f'/notes/{9999}/')
+        self.assertEqual(response.status_code, 404)

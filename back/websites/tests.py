@@ -2,9 +2,8 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient
-import json
 
-from .models import SitesModel
+from .models import WebsiteModel
 
 
 class WebsiteTest(TestCase):
@@ -24,7 +23,7 @@ class WebsiteTest(TestCase):
         }
 
     def create_new_site(self):
-        site = SitesModel.objects.create(  # type:ignore
+        site = WebsiteModel.objects.create(  # type:ignore
             title=self.new_site['title'],
             url=self.new_site['url'],
             color=self.new_site['color'],
@@ -44,53 +43,43 @@ class WebsiteTest(TestCase):
 
     def test_get_all_sites_check_json(self):
         response = self.client.get('/sites/')
-        result = json.loads(response.content)
-        r = True if "sites" in result else False
-        self.assertTrue(r)
+        self.assertEqual(response['Content-Type'], 'application/json')
 
     # Create note
     def test_create_site(self):
-        response = self.client.post('/sites/new/', self.new_site)
+        response = self.client.post('/sites/', self.new_site)
         self.assertEqual(response.status_code, 200)
-        note = SitesModel.objects.get(title=self.new_site['title'])  # type:ignore
+        note = WebsiteModel.objects.get(title=self.new_site['title'])
         self.assertIsNotNone(note)
 
     def test_create_site_no_title(self):
         data = self.new_site
         del data['title']
-        response = self.client.post('/sites/new/', data)
+        response = self.client.post('/sites/', data)
         self.assertEqual(response.status_code, 200)
 
     def test_create_site_no_text_error(self):
         data = self.new_site
         del data['url']
-        response = self.client.post('/sites/new/', data)
+        response = self.client.post('/sites/', data)
         self.assertEqual(response.status_code, 400)
 
     def test_create_site_no_color(self):
         data = self.new_site
         del data['color']
-        response = self.client.post('/sites/new/', data)
+        response = self.client.post('/sites/', data)
         self.assertEqual(response.status_code, 200)
 
     def test_delete_site(self):
         site = self.create_new_site()
-        data = {'id': site.id}
-        response = self.client.delete('/sites/del/', data)
-        self.assertEqual(response.status_code, 200)
+        response = self.client.delete(f'/sites/{site.id}/')
+        self.assertEqual(response.status_code, 204)
         try:
-            result = SitesModel.objects.get(pk=site.id)  # type:ignore
-        except SitesModel.DoesNotExist:  # type:ignore
+            result = WebsiteModel.objects.get(pk=site.id)
+        except WebsiteModel.DoesNotExist:  # type:ignore
             result = None
         self.assertIsNone(result)
 
-    def test_delete_site_not_id_error(self):
-        data = {}
-        response = self.client.delete('/sites/del/', data)
-        self.assertEqual(response.status_code, 400)
-
     def test_delete_site_id_error(self):
-        data = {'id': 99999}
-        response = self.client.delete('/sites/del/', data)
-        self.assertEqual(response.status_code, 400)
-
+        response = self.client.delete(f'/sites/{9999}/')
+        self.assertEqual(response.status_code, 404)

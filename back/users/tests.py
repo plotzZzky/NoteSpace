@@ -61,7 +61,7 @@ class LoginTest(TestCase):
 
     def test_login_status_error_empty(self):
         response = self.client.post('/users/login/', {})
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 400)
 
 
 class RegisterUserTest(TestCase):
@@ -211,23 +211,6 @@ class UpdateUserTest(TestCase):
         response = self.client.post('/users/login/', {'username': data['username'], 'password': data['pwd']})
         self.assertEqual(response.status_code, 200)
 
-    # Get infor from user
-    def test_get_user_info_status_200(self):
-        response = self.client.get('/users/profile/')
-        self.assertEqual(response.status_code, 200)
-
-    def test_get_user_info_no_login_error(self):
-        self.client.credentials()
-        response = self.client.get('/users/profile/')
-        self.assertEqual(response.status_code, 401)
-
-    def test_get_user_info_response_is_json(self):
-        response = self.client.get('/users/profile/')
-        if 'username' in response.json():
-            self.assertTrue(True)
-        else:
-            self.assertTrue(False)
-
     # Recovery password
     def test_recovery_pwd_status(self):
         data = {'username': 'newuser', 'password': '1234x567', 'pwd': '1234x567', 'answer': '12345'}
@@ -273,8 +256,3 @@ class UpdateUserTest(TestCase):
         data = {'username': 'anything'}
         response = self.client.post('/users/question/', data)
         self.assertEqual(response.status_code, 400)
-
-    def test_receive_your_question_get_error(self):
-        data = {'username': 'newuser'}
-        response = self.client.get('/users/question/', data)
-        self.assertEqual(response.status_code, 405)

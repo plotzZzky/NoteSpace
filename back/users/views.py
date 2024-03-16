@@ -19,6 +19,7 @@ class RegisterView(ModelViewSet):
     """ View de Registro de novos usuarios """
     serializer_class = UserSerializer
     queryset = []
+    http_method_names = ['post']
 
     def create(self, request, *args, **kwargs):
         try:
@@ -55,6 +56,7 @@ class LoginView(ModelViewSet):
     """ View de login """
     serializer_class = UserSerializer
     queryset = []
+    http_method_names = ['post']
 
     def create(self, request, *args, **kwargs):
         try:
@@ -75,8 +77,9 @@ class UpdateUserView(ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = UserSerializer
     queryset = []
+    http_method_names = ['post']
 
-    def post(self, request):
+    def create(self, request, *args, **kwargs):
         """ Atualiza as informações do usario """
         try:
             user = request.user
@@ -115,6 +118,7 @@ class RecoveryPassword(ModelViewSet):
     """ Recuperação de senhas do usuario """
     queryset = []
     serializer_class = UserSerializer
+    http_method_names = ['post']
 
     def create(self, request, *args, **kwargs):
         try:
@@ -123,30 +127,31 @@ class RecoveryPassword(ModelViewSet):
             password = request.data['password']
             pwd = request.data['pwd']
             user = User.objects.get(username=username)
-            if check_password(answer, user.recovery.answer):
+            if check_password(answer, user.profile.answer):
                 if validate_password(password, pwd):
                     user.set_password(password)
                     user.save()
                     return Response({"msg": "Senha atualizada!"}, status=200)
                 else:
                     msg = "As senhas precisam ser iguais, no minimo uma letra, numero e 8 digitos!"
-                    return Response({"erro": msg}, status=500)
+                    return Response({"erro": msg}, status=400)
             else:
                 raise ValueError()
         except (KeyError, ValueError, ObjectDoesNotExist):
-            return Response({"error": "Resposta incorreta!"}, status=500)
+            return Response({"error": "Resposta incorreta!"}, status=400)
 
 
 class ReceiverYourQuestion(ModelViewSet):
     """ Envia a question do usuario para o front para fazer a recuperação de senha """
     serializer_class = UserSerializer
     queryset = []
+    http_method_names = ['post']
 
     def create(self, request, *args, **kwargs):
         try:
             username = request.data['username']
             user = User.objects.get(username=username)
-            question = user.recovery.question
+            question = user.profile.question
             return Response({"question": question}, status=status.HTTP_200_OK)
-        except (KeyError, ValueError, ObjectDoesNotExist):
+        except (ObjectDoesNotExist, KeyError, ValueError):
             return Response({"error": "Usuario não encontrado"}, status=status.HTTP_400_BAD_REQUEST)

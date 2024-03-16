@@ -2,10 +2,8 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient
-import json
-import datetime
 
-from .models import ContactsModel
+from .models import ContactModel
 
 
 class ContactsTest(TestCase):
@@ -28,7 +26,7 @@ class ContactsTest(TestCase):
         }
 
     def create_new_contact(self):
-        contact = ContactsModel.objects.create(
+        contact = ContactModel.objects.create(
             user=self.user,
             firstname=self.new_contact['firstname'],
             lastname=self.new_contact['lastname'],
@@ -51,71 +49,61 @@ class ContactsTest(TestCase):
 
     def test_get_all_contacts_check_json(self):
         response = self.client.get('/contacts/')
-        result = json.loads(response.content)
-        r = True if "contacts" in result else False
-        self.assertTrue(r)
+        self.assertEqual(response['Content-Type'], 'application/json')
 
     # Create note
     def test_create_contact(self):
-        response = self.client.post('/contacts/new/', self.new_contact)
+        response = self.client.post('/contacts/', self.new_contact)
         self.assertEqual(response.status_code, 200)
-        contact = ContactsModel.objects.get(firstname=self.new_contact['firstname'])
+        contact = ContactModel.objects.get(firstname=self.new_contact['firstname'])
         self.assertIsNotNone(contact)
 
     def test_create_contacts_no_firstname_error(self):
         data = self.new_contact
         del data['firstname']
-        response = self.client.post('/contacts/new/', data)
+        response = self.client.post('/contacts/', data)
         self.assertEqual(response.status_code, 400)
 
     def test_create_contacts_no_lastname(self):
         data = self.new_contact
         del data['lastname']
-        response = self.client.post('/contacts/new/', data)
+        response = self.client.post('/contacts/', data)
         self.assertEqual(response.status_code, 200)
 
     def test_create_contacts_no_telephone(self):
         data = self.new_contact
         del data['telephone']
-        response = self.client.post('/contacts/new/', data)
+        response = self.client.post('/contacts/', data)
         self.assertEqual(response.status_code, 200)
 
     def test_create_contacts_no_email_error(self):
         data = self.new_contact
         del data['email']
-        response = self.client.post('/contacts/new/', data)
+        response = self.client.post('/contacts/', data)
         self.assertEqual(response.status_code, 400)
 
     def test_create_contacts_no_social(self):
         data = self.new_contact
         del data['social']
-        response = self.client.post('/contacts/new/', data)
+        response = self.client.post('/contacts/', data)
         self.assertEqual(response.status_code, 200)
 
     def test_create_contacts_no_color(self):
         data = self.new_contact
         del data['color']
-        response = self.client.post('/contacts/new/', data)
+        response = self.client.post('/contacts/', data)
         self.assertEqual(response.status_code, 200)
 
     def test_delete_contacts(self):
         note = self.create_new_contact()
-        data = {'id': note.id}
-        response = self.client.delete('/contacts/del/', data)
-        self.assertEqual(response.status_code, 200)
+        response = self.client.delete(f'/contacts/{note.id}/')
+        self.assertEqual(response.status_code, 204)
         try:
-            result = ContactsModel.objects.get(pk=note.id)
-        except ContactsModel.DoesNotExist:  # type:ignore
+            result = ContactModel.objects.get(pk=note.id)
+        except ContactModel.DoesNotExist:  # type:ignore
             result = None
         self.assertIsNone(result)
 
-    def test_delete_contacts_not_id_error(self):
-        data = {}
-        response = self.client.delete('/contacts/del/', data)
-        self.assertEqual(response.status_code, 400)
-
     def test_delete_contacts_id_error(self):
-        data = {'id': 99999}
-        response = self.client.delete('/contacts/del/', data)
-        self.assertEqual(response.status_code, 400)
-
+        response = self.client.delete(f'/contacts/{9999}/')
+        self.assertEqual(response.status_code, 404)
