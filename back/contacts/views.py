@@ -11,6 +11,7 @@ class ContactView(ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = ContactModel.objects.all()
     serializer_class = ContactSerializer
+    http_method_names = ['get', 'post', 'delete']
 
     def list(self, request, *args, **kwargs):
         query = ContactModel.objects.filter(user=request.user)

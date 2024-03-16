@@ -12,6 +12,7 @@ class NoteView(ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = NotesModel.objects.all()
     serializer_class = NoteSerializer
+    http_method_names = ['get', 'post', 'delete']
 
     def list(self, request, *args, **kwargs):
         query = NotesModel.objects.filter(user=request.user)

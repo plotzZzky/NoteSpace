@@ -11,6 +11,7 @@ class WebsiteView(ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = WebsiteModel.objects.all()
     serializer_class = WebSiteSerializer
+    http_method_names = ['get', 'post', 'delete']
 
     def list(self, request, *args, **kwargs):
         query = WebsiteModel.objects.filter(user=request.user)
